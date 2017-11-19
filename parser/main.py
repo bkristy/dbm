@@ -1,6 +1,22 @@
 import time
 import sys, datetime, os, inspect
 import urllib.request, json 
+
+import pymysql.cursors
+
+HOST = 'localhost'
+USER = 'root'
+PASSWORD = 'wecandowhatever'
+DB = 'myproject'
+
+
+connection = pymysql.connect(host=HOST,
+                             user=USER,
+                             password=PASSWORD,
+                             db=DB,
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
 with urllib.request.urlopen("http://www.uakron.edu/academics_majors/class-search/data/courses.json") as url:
     data = json.loads(url.read().decode('utf-8', 'ignore'))
     ##print(data)  ## data came in okay.
@@ -32,6 +48,7 @@ print('count of } ' + str(d2.count('}')))
 iterator = 0
 
 duplicate_ids = 0
+non_dup_count = 0
 
 Id_except = 0
 End_Date_except = 0
@@ -48,145 +65,194 @@ start_date_except = 0
 instructor_except = 0
 instruction_mode_except = 0
 campus_except = 0
+course_except = 0
+career_except = 0
+credit_except = 0
 
-for iterator in range(0, d2.count('}')):
+start = time.time()
 
+
+for iterator in range(0, d2.count('}') - 1):
+	
 	d3 = d2.split('{')[iterator+1].split('}')[0]
 	#print(d3)
 
-	
+	#--------------------------------------------------------------
 	try:
 		id = d3.split("'Id': '")[1].split("',")[0]
 	except:
 		id = ""
 		Id_except += 1
 		pass
-	
-	
-		
+	#--------------------------------------------------------------
 	try:
 		end_date = d3.split("'End_Date': '")[1].split("',")[0]
 	except:
 		end_date = ""
 		End_Date_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		term = d3.split("'Term': '")[1].split("',")[0]
 	except:
 		term = ""
 		Term_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		description = d3.split("'Description': '")[1].split("',")[0]
 	except:
 		description = ""
 		description_except += 1
 		pass
-		
+	#--------------------------------------------------------------	
 	try:
 		title = d3.split("'Title': '")[1].split("',")[0]
 	except:
 		title = ""
 		Title_except += 1
 		pass
-		
+	#--------------------------------------------------------------	
 	try:
 		section = d3.split("'Section': '")[1].split("',")[0]
 	except:
 		section = ""
 		Section_except += 1
 		pass
-		
+	#--------------------------------------------------------------	
 	try:
-		days = d3.split("'Days': '")[1].split("',")[0]
+		days = d3.split("'Days': '")[1].split("'")[0]
 	except:
 		days = ""
 		days_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		end_time = d3.split("'End_Time': '")[1].split("',")[0]
 	except:
 		end_time = ""
 		End_Time_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		location = d3.split("'Location': '")[1].split("',")[0]
 	except:
 		location = ""
 		location_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		department = d3.split("'Department': '")[1].split("',")[0]
 	except:
 		department  = ""
 		Department_except += 1
 		pass
-		
+	#--------------------------------------------------------------	
 	try:
 		instructor_email = d3.split("'Instructor_Email': '")[1].split("',")[0]
 	except:
 		instructor_email = ""
 		instructor_email_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		start_date  = d3.split("'Start_Date': '")[1].split("',")[0]
 	except:
 		start_date = ""
 		start_date_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		instructor  = d3.split("'Instructor': '")[1].split("',")[0]
 	except:
 		instructor  = ""
 		instructor_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		instruction_mode  = d3.split("'Instruction_Mode': '")[1].split("',")[0]
 	except:
 		instruction_mode = ""
 		instruction_mode_except += 1
 		pass
-	
+	#--------------------------------------------------------------
 	try:
 		campus  = d3.split("'Campus': '")[1].split("',")[0]
 	except:
 		campus = ""
 		campus_except += 1
 		pass
-	
-	iterator += 1
-	
-	if d2.count(id) > 1:
-		#print(str(id))
-		duplicate_ids += 1
-	
-		print("-----------------------------------------------")
-		print("Id:               " + id)
-		print("End Date:         " + end_date)
-		print("Term:             " + term)
-		print("description:      " + description)
-		print("Title:            " + title)
-		print("Section:          " + section)
-		print("days:             " + days)
-		print("End Time:         " + end_time)
-		print("location:         " + location)
-		print("Department:       " + department)
-		print("instructor email: " + instructor_email)
-		print("start date:       " + start_date)
-		print("instructor        " + instructor)
-		print("instruction mode: " + instruction_mode)
-		print("campus:           " + campus)
-	
-	
+	#--------------------------------------------------------------
+	try:
+		course  = d3.split("'Course': '")[1].split("',")[0]
+	except:
+		course = ""
+		course_except += 1
+		pass
+	#--------------------------------------------------------------
+	try:
+		career  = d3.split("'Career': '")[1].split("',")[0]
+	except:
+		career = ""
+		career_except += 1
+		pass
+	#--------------------------------------------------------------
+	try:
+		credit  = d3.split("'Credit': '")[1].split("',")[0]
+	except:
+		credit = ""
+		credit_except += 1
+		pass
+	#--------------------------------------------------------------
 
+
+
+	if d2.count(id) > 1:
+		print(str(id))
+		duplicate_ids += 1
+	else:
+		non_dup_count += 1
+	
+		# print("-----------------------------------------------")
+		# print(d3)	
+		# print("-----------------------------------------------")
+		# print("Id:               " + id)
+		# print("End Date:         " + end_date)
+		# print("Term:             " + term)
+		# print("description:      " + description)
+		# print("Title:            " + title)
+		# print("Section:          " + section)
+		# print("days:             " + days)
+		# print("End Time:         " + end_time)
+		# print("location:         " + location)
+		# print("Department:       " + department)
+		# print("instructor email: " + instructor_email)
+		# print("start date:       " + start_date)
+		# print("instructor        " + instructor)
+		# print("instruction mode: " + instruction_mode)
+		# print("campus:           " + campus)
+		# print("course:           " + course)
+		# print("career:           " + career)
+		# print("credit:           " + credit)
+		
+		
+		try:
+			with connection.cursor() as cursor:
+			sql = "INSERT INTO 'Courses' ('Id', 'End_Date', 'Term', 'Description', 'Title', 'Career', 'Section', 'Days', 'Credit', 'Start_Time', 'Courses', 'End_Time', 'Location', 'Department', 'Instructor_Email', 'Start_Date', 'Instructor', 'Instructor_Mode', 'Campus') VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+		
+			cursor.execute(sql, (id, end_date, term, description, title, section, days, end_time, location, department, instructor_email, start_date, instructor, instructor_mode, campus, course, career, credit))
+			connection.commit()
+		except:
+			print("error adding info to database" + str(id))
+			pass
+
+	iterator = iterator + 1
+	#print(str(iterator))
+	
+connection.close()
+stop = time.time()
+	
+print("Gen time:                " + str(stop - start))
 print("Id_except:               " + str(Id_except))
 print("End_Date_except:         " + str(End_Date_except))
 print("Term_except:             " + str(Term_except))
@@ -203,41 +269,8 @@ print("instructor_except:       " + str(instructor_except))
 print("instruction_mode_except: " + str(instruction_mode_except))
 print("campus_except:           " + str(campus_except))
 print("duplicate ids:           " + str(duplicate_ids))
+print("non dup ids:             " + str(non_dup_count))
 
-
-# d3 = d2.split('{')[2].split('}')[0]
-# #print(d3)
-
-# id = d3.split("'Id': '")[1].split("',")[0]
-# end_date = d3.split("'End_Date': '")[1].split("',")[0]
-# term = d3.split("'Term': '")[1].split("',")[0]
-# description = d3.split("'Description': '")[1].split("',")[0]
-# title = d3.split("'Title': '")[1].split("',")[0]
-# section = d3.split("'Section': '")[1].split("',")[0]
-# days = d3.split("'Days': '")[1].split("',")[0]
-# end_time = d3.split("'End_Time': '")[1].split("',")[0]
-# location = d3.split("'Location': '")[1].split("',")[0]
-# department = d3.split("'Department': '")[1].split("',")[0]
-# instructor_email = d3.split("'Instructor_Email': '")[1].split("',")[0]
-# start_date  = d3.split("'Start_Date': '")[1].split("',")[0]
-# instructor  = d3.split("'Instructor': '")[1].split("',")[0]
-# instruction_mode  = d3.split("'Instruction_Mode': '")[1].split("',")[0]
-# campus  = d3.split("'Campus': '")[1].split("',")[0]
-# print("-----------------------------------------------")
-# print("Id:               " + id)
-# print("End Date:         " + end_date)
-# print("Term:             " + term)
-# print("description:      " + description)
-# print("Title:            " + title)
-# print("Section:          " + section)
-# print("days:             " + days)
-# print("End Time:         " + end_time)
-# print("location:         " + location)
-# print("Department:       " + department)
-# print("instructor email: " + instructor_email)
-# print("start date:       " + start_date)
-# print("instructor        " + instructor)
-# print("instruction mode: " + instruction_mode)
-# print("campus:           " + campus)
+#EOF main.py
 
 

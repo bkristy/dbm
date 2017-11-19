@@ -1,7 +1,7 @@
 USE myproject;
 
 CREATE TABLE Courses(
-	Id int NOT NULL,
+	Id varchar(17) NOT NULL,
 	End_Date varchar(10) NOT NULL,
 	Term varchar(20) NOT NULL,
 	Description varchar(1000) NOT NULL,

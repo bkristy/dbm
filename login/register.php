@@ -32,7 +32,7 @@
 
             // Prepare a select statement
 
-            $sql = "SELECT id FROM Students WHERE Id = ?";
+            $sql = "SELECT Id FROM Students WHERE Id = ?";
 
             
 
