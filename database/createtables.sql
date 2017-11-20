@@ -7,19 +7,25 @@ CREATE TABLE Courses(
 	Description varchar(1000) NOT NULL,
 	Title varchar(100) NOT NULL,
 	Career varchar(55) NOT NULL,
-	Section varchar(3) NOT NULL,
+	Section varchar(25) NOT NULL,
 	Days varchar(100) NOT NULL,
-	Credit decimal(2,1) NOT NULL,
-	Start_Time varchar(8) NOT NULL,
-	Course varchar(8) NOT NULL,
-	End_Time varchar(8) NOT NULL,
+	Credit varchar(25) NOT NULL,
+	Start_Time varchar(25) NOT NULL,
+	Course varchar(25) NOT NULL,
+	End_Time varchar(25) NOT NULL,
 	Location varchar(100) NOT NULL,
 	Department varchar(100) NOT NULL,
 	Instructor_Email varchar(100) NOT NULL,
-	Start_Date varchar(10) NOT NULL,
-	Instructor varchar(100) NOT NULL,
+	Start_Date varchar(25) NOT NULL,
+	Instructor varchar(255) NOT NULL,
 	Instruction_Mode varchar(100) NOT NULL,
 	Campus varchar(100) NOT NULL,
+	PRIMARY KEY (Id)
+);
+
+CREATE TABLE Test(
+	Id varchar(17) NOT NULL,
+	Title varchar(100) NOT NULL
 	PRIMARY KEY (Id)
 );
 
